@@ -3,6 +3,7 @@ tamahagene scanner implementation
 """
 
 import pkgutil
+import sys
 from collections import defaultdict
 from collections.abc import Callable
 from types import ModuleType
@@ -60,7 +61,25 @@ class Scanner(Generic[T]):
 
     @classmethod
     def attach(cls, callback: CallbackHook[T], category: KeyOfRegistry) -> None:
+        """
+        Attach method from the scanner.
+
+        This is a more verbose way to attach a callback, with better typing support.
+        """
         cls.collected_hooks[category].add(callback)
+
+    @classmethod
+    def clear_cache(cls) -> None:
+        """
+        Clear the scanning cache.
+
+        This method allows to clear the loading cache, for testing purpose.
+        """
+        for mod in cls.loaded_mods:
+            if mod.__name__ in sys.modules:
+                del sys.modules[mod.__name__]
+        cls.loaded_mods.clear()
+        cls.collected_hooks.clear()
 
 
 def attach(callback: CallbackHook[Any], category: KeyOfRegistry) -> None:
@@ -68,5 +87,10 @@ def attach(callback: CallbackHook[Any], category: KeyOfRegistry) -> None:
     Attach a callback to a category while loading a module.
 
     This function preload the callback, arranged by their category.
+
+    :param callback: the callback to call when the scan is called.
+    :param category: an attribute of the registry, if the registry does not have
+        an attribute that matche the category, the category will callback
+        will never be loaded.
     """
     Scanner[Any].attach(callback, category)

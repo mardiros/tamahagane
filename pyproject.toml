@@ -83,7 +83,8 @@ disallow_untyped_defs = true
 module = "tamahagane.*"
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests/unittestlazy"]
+norecursedirs = "tests/lazyapp"
 filterwarnings = [
     "error",
 ]
