@@ -1,3 +1,6 @@
+## 0.3.0 - Released on 2026-01-25
+* APIBreak: stop exposing the scanner in the callback, only the registry. 
+
 ## 0.2.0 - Released on 2026-01-25
 * APIBreak: drop scan module directly, module name required.
 * Add support of relative package.
