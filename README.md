@@ -83,6 +83,17 @@ def handle_stuff(...):
 handle_stuff is **unmodified** by its decorator and is purely unit testable.
 No overhead.
 
+## Installation
+
+Tamahagane is available on [PyPI](https://pypi.org/project/tamahagane/)
+
+So you can installing using your favorite packaging tool, mine is uv:
+
+```bash
+uv add tamahagane
+```
+
 ## See also
 
+- Documentation - https://mardiros.github.io/tamahagane/
 - Venusian - https://docs.pylonsproject.org/projects/venusian/en/
