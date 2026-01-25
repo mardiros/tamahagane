@@ -1,11 +1,9 @@
 import inspect
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Literal, get_args
+from typing import Any, get_args
 
 import tamahagane as th
-
-Categories = Literal["cli"]
 
 Listener = Callable[..., Any]
 

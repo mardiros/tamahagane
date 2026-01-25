@@ -18,6 +18,65 @@ and lacks type support.
 Tamahagane reuse the same vocabular, a Scanner and an attach function,
 but the API is not fully compatible, in order to get a simpler version.
 
+## Usage
+
+To use Tamahagane you need to create a registries class that hold
+all registries your app may load. The definition of the registry
+is free and depends of the usage.
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Registries:
+    app_registry: ...
+```
+
+After what, the registries is filled out using the scan of the application code.
+
+```python
+import tamahagane as th
+
+scanner = th.Scanner[Registries](Registries(app_registry=...))
+scanner.scan("app.service_handlers")
+```
+
+At this time, the `app.service_handlers` is a module, or a package containing
+submodules, that will be recursibely loaded. It contains decorated function,
+where the decorator has been created in the application code to create the
+callback.
+
+```python
+from collections.abc import Callable
+from typing import Any
+
+import tamahagane as th
+
+
+CommandHandler = Callable[..., Any]
+
+def command_handler(wrapped: CommandHandler) -> CommandHandler:
+
+    def callback(scanner: th.Scanner[Registries]) -> None:
+        scanner.registry.app_registry.do_something_with(wrapped, ...)
+
+    th.attach(callback, category="app_registry")
+    return wrapped
+
+```
+
+Now, you have a command_handler decorator that can be used an be filled out an
+application registry with the decorated method.
+
+```python
+@command_handler
+def handle_stuff(...):
+    ...
+```
+
+handle_stuff is **unmodified** by its decorator and is purely unit testable.
+No overhead.
+
 ## See also
 
 - Venusian - https://docs.pylonsproject.org/projects/venusian/en/
