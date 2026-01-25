@@ -5,6 +5,7 @@ tamahagene scanner implementation
 import pkgutil
 from collections import defaultdict
 from collections.abc import Callable
+from types import ModuleType
 from typing import Any, ClassVar, Generic, TypeVar
 
 from tamahagane.resolver import resolve_maybe_relative
@@ -21,26 +22,27 @@ class Scanner(Generic[T]):
 
     collected_hooks: ClassVar[dict[str, set[Any]]] = defaultdict(set)
     registry: T
-    loaded_mods: ClassVar[set[str]] = set()
+    loaded_mods: ClassVar[set[ModuleType]] = set()
 
     def __init__(self, registry: T):
         self.registry = registry
         self.categories = {cat for cat in dir(registry) if not cat.startswith("_")}
 
     @classmethod
-    def load_modules(cls, *modules: str, depth: int) -> None:
-        for module in modules:
-            if module in cls.loaded_mods:
+    def load_modules(cls, *modules: ModuleType | str, depth: int) -> None:
+        for mod in modules:
+            if isinstance(mod, str):
+                mod = resolve_maybe_relative(mod, depth)
+            if mod in cls.loaded_mods:
                 continue
-            cls.loaded_mods.add(module)
-            mod = resolve_maybe_relative(module, depth)
+            cls.loaded_mods.add(mod)
 
             if hasattr(mod, "__path__"):  # if it's a package, recursive call
                 for _, submodname, _ in pkgutil.iter_modules(mod.__path__):
                     fullname = f"{mod.__name__}.{submodname}"
                     cls.load_modules(fullname, depth=depth + 1)  # Recursive call
 
-    def scan(self, *modules: str, stack_depth: int = 1) -> None:
+    def scan(self, *modules: ModuleType | str, stack_depth: int = 1) -> None:
         """
         Scan modules from the given parameter.
 
