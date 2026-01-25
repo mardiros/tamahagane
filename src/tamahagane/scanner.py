@@ -19,6 +19,7 @@ class Scanner(Generic[T]):
 
     collected_hooks: ClassVar[dict[str, set[Any]]] = defaultdict(set)
     registry: T
+    loaded_mods: ClassVar[set[str]] = set()
 
     def __init__(self, registry: T):
         self.registry = registry
@@ -27,6 +28,9 @@ class Scanner(Generic[T]):
     @classmethod
     def load_modules(cls, *modules: str, depth: int) -> None:
         for module in modules:
+            if module in cls.loaded_mods:
+                continue
+            cls.loaded_mods.add(module)
             mod = resolve_maybe_relative(module, depth)
 
             if hasattr(mod, "__path__"):  # if it's a package, recursive call
