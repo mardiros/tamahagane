@@ -38,5 +38,5 @@ def command_handler(wrapped: Listener) -> Listener:
         msg_type = get_args(msg_type_literal)[0]
         registry.cli.add_listener(msg_type, wrapped)
 
-    th.attach(callback, category="cli")
+    th.attach(wrapped, callback, category="cli")
     return wrapped

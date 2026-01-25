@@ -2,10 +2,12 @@
 tamahagene scanner implementation
 """
 
+import importlib
 import pkgutil
 import sys
 from collections import defaultdict
 from collections.abc import Callable
+from dataclasses import dataclass
 from types import ModuleType
 from typing import Any, ClassVar, Generic, TypeVar
 
@@ -14,6 +16,13 @@ from tamahagane.resolver import resolve_maybe_relative
 T = TypeVar("T")
 KeyOfRegistry = str
 CallbackHook = Callable[[T], None]
+RegisteredFn = Callable[..., Any]
+
+
+@dataclass
+class CallbackInfo:
+    fn: RegisteredFn
+    callback: CallbackHook[Any]
 
 
 class Scanner(Generic[T]):
@@ -22,7 +31,7 @@ class Scanner(Generic[T]):
     """
 
     cleared_cache: ClassVar[bool] = False
-    collected_hooks: ClassVar[dict[str, list[Any]]] = defaultdict(list)
+    collected_hooks: ClassVar[dict[str, list[CallbackInfo]]] = defaultdict(list)
     registry: T
     loaded_mods: ClassVar[set[ModuleType]] = set()
 
@@ -31,10 +40,8 @@ class Scanner(Generic[T]):
         self.categories = {cat for cat in dir(registry) if not cat.startswith("_")}
 
     @classmethod
-    def load_modules(cls, *modules: ModuleType | str, depth: int) -> None:
+    def load_modules(cls, *modules: ModuleType) -> None:
         for mod in modules:
-            if isinstance(mod, str):
-                mod = resolve_maybe_relative(mod, depth)
             if mod in cls.loaded_mods:
                 continue
             cls.loaded_mods.add(mod)
@@ -44,7 +51,8 @@ class Scanner(Generic[T]):
                     fullname = f"{mod.__name__}.{submodname}"
                     if Scanner.cleared_cache and fullname in sys.modules:
                         del sys.modules[fullname]
-                    cls.load_modules(fullname, depth=depth + 1)  # Recursive call
+                    submod = importlib.import_module(fullname)
+                    cls.load_modules(submod)  # Recursive call
 
     def scan(self, *modules: ModuleType | str, stack_depth: int = 1) -> None:
         """
@@ -57,20 +65,28 @@ class Scanner(Generic[T]):
             If you expose a scan method in a framework, the depth of the stack frame
             must be updated in order to get it relative to the appropriate caller.
         """
-        self.load_modules(*modules, depth=stack_depth)
+        mods = [
+            resolve_maybe_relative(mod, stack_depth) if isinstance(mod, str) else mod
+            for mod in modules
+        ]
+        mod_names = [mod.__name__ for mod in mods]
+        self.load_modules(*mods)
         for category in self.categories:
             for hook in self.collected_hooks[category]:
-                hook(self.registry)
+                if any([hook.fn.__module__.startswith(mod) for mod in mod_names]):
+                    hook.callback(self.registry)
         Scanner.cleared_cache = False
 
     @classmethod
-    def attach(cls, callback: CallbackHook[T], category: KeyOfRegistry) -> None:
+    def attach(
+        cls, wrapped: RegisteredFn, callback: CallbackHook[T], category: KeyOfRegistry
+    ) -> None:
         """
         Attach method from the scanner.
 
         This is a more verbose way to attach a callback, with better typing support.
         """
-        cls.collected_hooks[category].append(callback)
+        cls.collected_hooks[category].append(CallbackInfo(wrapped, callback))
 
     @classmethod
     def clear_cache(cls) -> None:
@@ -87,7 +103,9 @@ class Scanner(Generic[T]):
         cls.cleared_cache = True
 
 
-def attach(callback: CallbackHook[Any], category: KeyOfRegistry) -> None:
+def attach(
+    wrapped: RegisteredFn, callback: CallbackHook[Any], category: KeyOfRegistry
+) -> None:
     """
     Attach a callback to a category while loading a module.
 
@@ -98,4 +116,4 @@ def attach(callback: CallbackHook[Any], category: KeyOfRegistry) -> None:
         an attribute that matche the category, the category will callback
         will never be loaded.
     """
-    Scanner[Any].attach(callback, category)
+    Scanner[Any].attach(wrapped, callback, category)
