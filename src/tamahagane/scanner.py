@@ -10,6 +10,8 @@ from typing import Any, ClassVar, Generic, TypeVar
 from tamahagane.resolver import resolve_maybe_relative
 
 T = TypeVar("T")
+KeyOfRegistry = str
+CallbackHook = Callable[[T], None]
 
 
 class Scanner(Generic[T]):
@@ -52,21 +54,17 @@ class Scanner(Generic[T]):
         self.load_modules(*modules, depth=stack_depth)
         for category in self.categories:
             for hook in self.collected_hooks[category]:
-                hook(self)
+                hook(self.registry)
 
     @classmethod
-    def attach(cls, callback: "CallbackHook", category: "KeyOfRegistry") -> None:
+    def attach(cls, callback: CallbackHook[T], category: KeyOfRegistry) -> None:
         cls.collected_hooks[category].add(callback)
 
 
-KeyOfRegistry = str
-CallbackHook = Callable[[Scanner[Any]], None]
-
-
-def attach(callback: CallbackHook, category: KeyOfRegistry) -> None:
+def attach(callback: CallbackHook[Any], category: KeyOfRegistry) -> None:
     """
     Attach a callback to a category while loading a module.
 
     This function preload the callback, arranged by their category.
     """
-    Scanner.attach(callback, category)
+    Scanner[Any].attach(callback, category)

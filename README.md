@@ -63,8 +63,8 @@ CommandHandler = Callable[..., Any]
 
 def command_handler(wrapped: CommandHandler) -> CommandHandler:
 
-    def callback(scanner: th.Scanner[Registries]) -> None:
-        scanner.registry.app_registry.do_something_with(wrapped, ...)
+    def callback(registries: Registries) -> None:
+        registries.app_registry.do_something_with(wrapped, ...)
 
     th.attach(callback, category="app_registry")
     return wrapped
