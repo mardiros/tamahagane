@@ -1,6 +1,7 @@
 """
 tamahagene scanner implementation
 """
+
 import importlib
 import pkgutil
 from collections import defaultdict
@@ -15,6 +16,7 @@ class Scanner(Generic[T]):
     """
     Scan python modules, collect hooks, then callback.
     """
+
     collected_hooks: ClassVar[dict[str, set[Any]]] = defaultdict(set)
     registry: T
 
@@ -31,8 +33,7 @@ class Scanner(Generic[T]):
             if hasattr(mod, "__path__"):  # if it's a package, recursive call
                 for _, submodname, _ in pkgutil.iter_modules(mod.__path__):
                     fullname = f"{mod.__name__}.{submodname}"
-                    submod = importlib.import_module(fullname)
-                    cls.load_modules(submod)  # Recursive call
+                    cls.load_modules(fullname)  # Recursive call
 
     def scan(self, *modules: str | ModuleType) -> None:
         self.load_modules(*modules)
