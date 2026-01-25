@@ -1,0 +1,94 @@
+[project]
+name = "tamahagane"
+version = "0.0.0"
+description = "Forge your app registry."
+readme = "README.md"
+authors = [{ name = "Guillaume Gauvrit", email = "guillaume@gauvr.it" }]
+license = { text = "MIT" }
+requires-python = ">=3.11"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Rust",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+
+[project.urls]
+Homepage = "https://mardiros.github.io/tamahagane"
+Documentation = "https://mardiros.github.io/tamahagane"
+Repository = "https://github.com/mardiros/tamahagane.git"
+Issues = "https://github.com/mardiros/tamahagane/issues"
+Changelog = "https://mardiros.github.io/tamahagane/user/changelog.html"
+
+
+[project.optional-dependencies]
+docs = [
+    "furo >=2024.5.6",
+    "linkify-it-py >=2.0.3,<3",
+    "myst-parser >=4.0.0,<5",
+    "sphinx >=8.0.0,<9",
+    "sphinx-autodoc2 >=0.5.0,<1",
+]
+
+[dependency-groups]
+dev = [
+    "mypy >=1.16.0,<2",
+    "pytest>=9.0.2",
+]
+docs = [
+    "furo >=2024.5.6",
+    "linkify-it-py >=2.0.3,<3",
+    "myst-parser >=4.0.0,<5",
+    "sphinx >=8.0.0,<9",
+    "sphinx-autodoc2 >=0.5.0,<1",
+]
+
+
+
+[tool.pdm.build]
+includes = ["src", "CHANGELOG.rst"]
+excludes = ["tests"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "B",   # bug bear security warning
+    "I",   # isort import order
+    "F",   # pyflakes
+    "UP",  # alter when better syntax is available
+    "RUF", #  the ruff devleoper's own rules
+]
+ignore = ["RUF022"]
+
+
+[tool.pyright]
+include = ["src", "tests"]
+typeCheckingMode = "strict"
+venvPath = ".venv"
+
+
+[[tool.mypy.overrides]]
+disallow_any_generics = true
+disallow_untyped_defs = true
+module = "tamahagane.*"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+    "error",
+]
+
+[tool.coverage.report]
+exclude_lines = ["# coverage: ignore"]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
