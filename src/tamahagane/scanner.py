@@ -4,7 +4,6 @@ tamahagene scanner implementation
 
 import importlib
 import pkgutil
-import sys
 from collections import defaultdict
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -30,7 +29,6 @@ class Scanner(Generic[T]):
     Scan python modules, collect hooks, then callback.
     """
 
-    cleared_cache: ClassVar[bool] = False
     collected_hooks: ClassVar[dict[str, list[CallbackInfo]]] = defaultdict(list)
     registry: T
     loaded_mods: ClassVar[set[ModuleType]] = set()
@@ -49,8 +47,6 @@ class Scanner(Generic[T]):
             if hasattr(mod, "__path__"):  # if it's a package, recursive call
                 for _, submodname, _ in pkgutil.iter_modules(mod.__path__):
                     fullname = f"{mod.__name__}.{submodname}"
-                    if Scanner.cleared_cache and fullname in sys.modules:
-                        del sys.modules[fullname]
                     submod = importlib.import_module(fullname)
                     cls.load_modules(submod)  # Recursive call
 
@@ -75,7 +71,6 @@ class Scanner(Generic[T]):
             for hook in self.collected_hooks[category]:
                 if any([hook.fn.__module__.startswith(mod) for mod in mod_names]):
                     hook.callback(self.registry)
-        Scanner.cleared_cache = False
 
     @classmethod
     def attach(
@@ -87,20 +82,6 @@ class Scanner(Generic[T]):
         This is a more verbose way to attach a callback, with better typing support.
         """
         cls.collected_hooks[category].append(CallbackInfo(wrapped, callback))
-
-    @classmethod
-    def clear_cache(cls) -> None:
-        """
-        Clear the scanning cache.
-
-        This method allows to clear the loading cache, for testing purpose.
-        """
-        for mod in cls.loaded_mods:
-            if mod.__name__ in sys.modules:
-                del sys.modules[mod.__name__]
-        cls.loaded_mods.clear()
-        cls.collected_hooks.clear()
-        cls.cleared_cache = True
 
 
 def attach(
