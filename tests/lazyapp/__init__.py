@@ -1,7 +1,5 @@
 """
 A dummy app which tests the lazy loading
-
-Never import this app using an import statement !
 """
 
 import inspect

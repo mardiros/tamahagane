@@ -21,6 +21,7 @@ class Scanner(Generic[T]):
     Scan python modules, collect hooks, then callback.
     """
 
+    cleared_cache: ClassVar[bool] = False
     collected_hooks: ClassVar[dict[str, set[Any]]] = defaultdict(set)
     registry: T
     loaded_mods: ClassVar[set[ModuleType]] = set()
@@ -41,6 +42,8 @@ class Scanner(Generic[T]):
             if hasattr(mod, "__path__"):  # if it's a package, recursive call
                 for _, submodname, _ in pkgutil.iter_modules(mod.__path__):
                     fullname = f"{mod.__name__}.{submodname}"
+                    if Scanner.cleared_cache and fullname in sys.modules:
+                        del sys.modules[fullname]
                     cls.load_modules(fullname, depth=depth + 1)  # Recursive call
 
     def scan(self, *modules: ModuleType | str, stack_depth: int = 1) -> None:
@@ -58,6 +61,7 @@ class Scanner(Generic[T]):
         for category in self.categories:
             for hook in self.collected_hooks[category]:
                 hook(self.registry)
+        Scanner.cleared_cache = False
 
     @classmethod
     def attach(cls, callback: CallbackHook[T], category: KeyOfRegistry) -> None:
@@ -79,11 +83,8 @@ class Scanner(Generic[T]):
             if mod.__name__ in sys.modules:
                 del sys.modules[mod.__name__]
         cls.loaded_mods.clear()
-        # for funcs in cls.collected_hooks.values():
-        #     for func in funcs:
-        #         if func.__module__ in sys.modules:
-        #             del sys.modules[func.__module__]
         cls.collected_hooks.clear()
+        cls.cleared_cache = True
 
 
 def attach(callback: CallbackHook[Any], category: KeyOfRegistry) -> None:

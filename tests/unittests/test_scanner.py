@@ -26,3 +26,16 @@ def test_scan_twice():
     scanner.scan("tests.lazyapp.commands")
     scanner.scan("tests.lazyapp.commands")
     assert set(cli.commands.keys()) == {"hello-sub", "hello-world"}
+
+
+def test_scan_clear_cache():
+    cli = Cli()
+    scanner = th.Scanner[Registries](Registries(cli=cli))
+    scanner.scan("tests.lazyapp.commands")
+
+    th.Scanner[Registries].clear_cache()
+    import tests.lazyapp.commands.hello_world  # type: ignore  # noqa
+
+    scanner = th.Scanner[Registries](Registries(cli=cli))
+    scanner.scan("tests.lazyapp.commands")
+    assert set(cli.commands.keys()) == {"hello-sub", "hello-world"}
