@@ -15,7 +15,9 @@ from tamahagane import resolver
             tests.dummyapp.commands, tests.dummyapp.commands, id="regular package"
         ),
         pytest.param(
-            tests.dummyapp.commands.hello_world, tests.dummyapp.commands, id="module"
+            tests.dummyapp.commands.hello_world,
+            tests.dummyapp.commands,
+            id="module",
         ),
         pytest.param(sys, sys, id="compiled package"),
     ],
