@@ -22,7 +22,7 @@ class Scanner(Generic[T]):
     """
 
     cleared_cache: ClassVar[bool] = False
-    collected_hooks: ClassVar[dict[str, set[Any]]] = defaultdict(set)
+    collected_hooks: ClassVar[dict[str, list[Any]]] = defaultdict(list)
     registry: T
     loaded_mods: ClassVar[set[ModuleType]] = set()
 
@@ -70,7 +70,7 @@ class Scanner(Generic[T]):
 
         This is a more verbose way to attach a callback, with better typing support.
         """
-        cls.collected_hooks[category].add(callback)
+        cls.collected_hooks[category].append(callback)
 
     @classmethod
     def clear_cache(cls) -> None:
