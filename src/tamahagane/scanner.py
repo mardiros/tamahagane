@@ -2,12 +2,12 @@
 tamahagene scanner implementation
 """
 
-import importlib
 import pkgutil
 from collections import defaultdict
 from collections.abc import Callable
-from types import ModuleType
 from typing import Any, ClassVar, Generic, TypeVar
+
+from tamahagane.resolver import resolve_maybe_relative
 
 T = TypeVar("T")
 
@@ -25,18 +25,27 @@ class Scanner(Generic[T]):
         self.categories = {cat for cat in dir(registry) if not cat.startswith("_")}
 
     @classmethod
-    def load_modules(cls, *modules: str | ModuleType) -> None:
-        for mod in modules:
-            if isinstance(mod, str):
-                mod = importlib.import_module(mod)
+    def load_modules(cls, *modules: str, depth: int) -> None:
+        for module in modules:
+            mod = resolve_maybe_relative(module, depth)
 
             if hasattr(mod, "__path__"):  # if it's a package, recursive call
                 for _, submodname, _ in pkgutil.iter_modules(mod.__path__):
                     fullname = f"{mod.__name__}.{submodname}"
-                    cls.load_modules(fullname)  # Recursive call
+                    cls.load_modules(fullname, depth=depth + 1)  # Recursive call
 
-    def scan(self, *modules: str | ModuleType) -> None:
-        self.load_modules(*modules)
+    def scan(self, *modules: str, stack_depth: int = 1) -> None:
+        """
+        Scan modules from the given parameter.
+
+
+        :param modules: modules are absolute or relative if the starts with a dot.
+        :param stack_depth: in case of relative package, speficy from what the package
+            is relative too.
+            If you expose a scan method in a framework, the depth of the stack frame
+            must be updated in order to get it relative to the appropriate caller.
+        """
+        self.load_modules(*modules, depth=stack_depth)
         for category in self.categories:
             for hook in self.collected_hooks[category]:
                 hook(self)
