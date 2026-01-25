@@ -79,6 +79,10 @@ class Scanner(Generic[T]):
             if mod.__name__ in sys.modules:
                 del sys.modules[mod.__name__]
         cls.loaded_mods.clear()
+        # for funcs in cls.collected_hooks.values():
+        #     for func in funcs:
+        #         if func.__module__ in sys.modules:
+        #             del sys.modules[func.__module__]
         cls.collected_hooks.clear()
 
 
