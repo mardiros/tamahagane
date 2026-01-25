@@ -1,4 +1,4 @@
-# tamahagane
+# Tamahagane
 
 
 [![Documentation](https://github.com/mardiros/tamahagane/actions/workflows/publish-doc.yml/badge.svg)](https://mardiros.github.io/tamahagane/)
