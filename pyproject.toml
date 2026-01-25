@@ -1,6 +1,6 @@
 [project]
 name = "tamahagane"
-version = "0.0.1"
+version = "0.1.0"
 description = "Forge your application registries."
 readme = "README.md"
 authors = [{ name = "Guillaume Gauvrit", email = "guillaume@gauvr.it" }]
