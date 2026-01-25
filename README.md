@@ -1,5 +1,11 @@
 # tamahagane
 
+
+[![Documentation](https://github.com/mardiros/tamahagane/actions/workflows/publish-doc.yml/badge.svg)](https://mardiros.github.io/tamahagane/)
+[![Continuous Integration](https://github.com/mardiros/tamahagane/actions/workflows/tests.yml/badge.svg)](https://github.com/mardiros/tamahagane/actions/workflows/tests.yml)
+[![Coverage Report](https://codecov.io/gh/mardiros/tamahagane/graph/badge.svg?token=DTpi73d7mf)](https://codecov.io/gh/mardiros/tamahagane)
+
+
 Forge your application registries.
 
 Tamahagane is a library designed for constructing application registries,
