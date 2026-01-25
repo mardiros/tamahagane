@@ -1,7 +1,7 @@
 [project]
 name = "tamahagane"
 version = "0.0.1"
-description = "Forge your app registry."
+description = "Forge your application registries."
 readme = "README.md"
 authors = [{ name = "Guillaume Gauvrit", email = "guillaume@gauvr.it" }]
 license = { text = "MIT" }
