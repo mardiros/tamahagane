@@ -28,11 +28,11 @@ def command_handler(wrapped: Listener) -> Listener:
     Decorator to listen for a command or an event.
     """
 
-    def callback(scanner: th.Scanner[Registries]) -> None:
+    def callback(registry: Registries) -> None:
         argsspec = inspect.getfullargspec(wrapped)
         msg_type_literal = argsspec.annotations[argsspec.args[0]]
         msg_type = get_args(msg_type_literal)[0]
-        scanner.registry.cli.add_listener(msg_type, wrapped)
+        registry.cli.add_listener(msg_type, wrapped)
 
-    th.attach(callback, category="cli")
+    th.Scanner[Registries].attach(callback, category="cli")
     return wrapped
