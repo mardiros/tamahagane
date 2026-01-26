@@ -5,7 +5,7 @@ tamahagene scanner implementation
 import importlib
 import pkgutil
 from collections import defaultdict
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from types import ModuleType
 from typing import Any, ClassVar, Generic, TypeVar
@@ -38,8 +38,10 @@ class Scanner(Generic[T]):
         self.categories = {cat for cat in dir(registry) if not cat.startswith("_")}
 
     @classmethod
-    def load_modules(cls, *modules: ModuleType) -> None:
+    def load_modules(cls, *modules: ModuleType, ignore: Sequence[str] = ()) -> None:
         for mod in modules:
+            if mod.__name__ in ignore:
+                continue
             if mod in cls.loaded_mods:
                 continue
             cls.loaded_mods.add(mod)
@@ -47,10 +49,18 @@ class Scanner(Generic[T]):
             if hasattr(mod, "__path__"):  # if it's a package, recursive call
                 for _, submodname, _ in pkgutil.iter_modules(mod.__path__):
                     fullname = f"{mod.__name__}.{submodname}"
+                    # take care, we still preload modules that may be excluded
+                    # as hook here because we cache loaded modules to avoid
+                    # recursive call to be done many times.
                     submod = importlib.import_module(fullname)
                     cls.load_modules(submod)  # Recursive call
 
-    def scan(self, *modules: ModuleType | str, stack_depth: int = 1) -> None:
+    def scan(
+        self,
+        *modules: ModuleType | str,
+        stack_depth: int = 1,
+        ignore: Sequence[str] = (),
+    ) -> None:
         """
         Scan modules from the given parameter.
 
@@ -66,10 +76,30 @@ class Scanner(Generic[T]):
             for mod in modules
         ]
         mod_names = [mod.__name__ for mod in mods]
-        self.load_modules(*mods)
+        absolute_ignore: list[str] = []
+        for ign in ignore:
+            if ign.startswith("."):
+                absolute_ignore.extend([f"{mod}{ign}" for mod in mod_names])
+            else:
+                absolute_ignore.append(ign)
+
+        # we don't load the module ignored in the cache
+        self.load_modules(*mods, ignore=absolute_ignore)
+
+        def match_(hook: CallbackInfo) -> bool:
+            for excl in absolute_ignore:
+                if hook.fn.__module__ == excl:
+                    return False
+                if hook.fn.__module__.startswith(f"{excl}."):
+                    return False
+            for mod in mod_names:
+                if hook.fn.__module__.startswith(mod):
+                    return True
+            return False
+
         for category in self.categories:
             for hook in self.collected_hooks[category]:
-                if any([hook.fn.__module__.startswith(mod) for mod in mod_names]):
+                if match_(hook):
                     hook.callback(self.registry)
 
     @classmethod
