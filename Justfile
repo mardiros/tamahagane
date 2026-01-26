@@ -19,8 +19,8 @@ cleandoc:
 
 test: lint typecheck unittest
 
-lf:
-    uv run pytest -sxvvv --lf
+lf test_suite=default_test_suite:
+    uv run pytest -sxvvv --lf  {{test_suite}}
 
 unittest test_suite=default_test_suite:
     uv run pytest -sxv {{test_suite}}
