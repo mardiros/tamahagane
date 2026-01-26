@@ -66,7 +66,7 @@ def command_handler(wrapped: CommandHandler) -> CommandHandler:
     def callback(registries: Registries) -> None:
         registries.app_registry.do_something_with(wrapped, ...)
 
-    th.attach(callback, category="app_registry")
+    th.attach(wrapped, callback, category="app_registry")
     return wrapped
 
 ```
@@ -82,6 +82,14 @@ def handle_stuff(...):
 
 handle_stuff is **unmodified** by its decorator and is purely unit testable.
 No overhead.
+
+## Difference from Venusian
+
+* Tamahagane does not have a onerror on the scan, it raises.
+* Tamahagane only support list of string, or tuple of string on the `onignore`.
+* Tamahagane does not have a category on the scan method, the categories are the
+  attributes of the registry, nothing less, nothing more.
+* Tamahagane does not support class decoration.
 
 ## Installation
 
