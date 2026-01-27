@@ -1,3 +1,7 @@
+## 0.4.2 - Released on 2026-01-27
+* Feature: autorize string to be passed to tamahagane.Scanner.scan() parameter ignore. 
+* Update the doc.
+
 ## 0.4.1 - Released on 2026-01-26
 * Feature: Parameter `ignore` added to method tamahagane.Scanner.scan().
   The scan method can ignore module or package during a scan.
