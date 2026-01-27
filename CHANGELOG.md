@@ -1,3 +1,6 @@
+## 0.4.3 - Released on 2026-01-27
+* Bugfix: relative import on python 3.10 looks not working properly. 
+
 ## 0.4.2 - Released on 2026-01-27
 * Feature: autorize string to be passed to tamahagane.Scanner.scan() parameter ignore. 
 * Update the doc.
