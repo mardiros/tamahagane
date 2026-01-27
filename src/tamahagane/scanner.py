@@ -151,6 +151,8 @@ def attach(
 
     This function preload the callback, arranged by their category.
 
+    :param wrapped: the wrapped function that will be added to a regitry during the
+        scan.
     :param callback: the callback to call when the scan is called.
     :param category: an attribute of the registry, if the registry does not have
         an attribute that matche the category, the category will callback
