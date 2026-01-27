@@ -86,8 +86,7 @@ No overhead.
 ## Difference from Venusian
 
 * Tamahagane supports absolute and relative name of module on scanner method scan.
-* Tamahagane does not have a onerror on the scan, it raises.
-* Tamahagane only support list of string, or tuple of string on the `onignore`.
+* Tamahagane does not have a `onerror` on the scan method, it raises.
 * Tamahagane does not have a category on the scan method, the categories are the
   attributes of the registry, nothing less, nothing more.
 * Tamahagane does not support class decoration.
