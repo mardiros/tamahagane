@@ -107,7 +107,7 @@ Here is a curative list of projects using tamahagane:
 |-------------|-----------------------------------------------------------------------------|-------------------------------------------------|
 | fastlife    | A web framework that register routes, templates and more using th. | [github.com/mardiros/fastlife](https://github.com/mardiros/fastlife)   |
 | messagebus  | A message bus implementation for Python applications. | [github.com/mardiros/messagebus](https://github.com/mardiros/messagebus) |
-| whitesmith  | A testing library for blacksmith rest client. | [github.com/mardiros/whitesmith](https://github.com/mardiros/whitesmith) |
+| whitesmith  | A testing library for blacksmith rest client. It scan routes, like a read web framework. | [github.com/mardiros/whitesmith](https://github.com/mardiros/whitesmith) |
 
 ## See also
 
