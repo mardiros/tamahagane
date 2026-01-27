@@ -6,14 +6,16 @@
 :maxdepth: 1
 :caption: API:
 
-develop/tamahagane/tamahagane
+api
+changelog
 ```
+
 
 ```{toctree}
 :maxdepth: 1
-:caption: Changelog:
+:caption: Developper doc:
 
-changelog
+develop/index
 ```
 
 ## Indices and tables
