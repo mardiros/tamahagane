@@ -1,0 +1,5 @@
+Tamahagane
+==========
+
+.. automodule:: tamahagane
+   :members:

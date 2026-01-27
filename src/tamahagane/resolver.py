@@ -1,7 +1,10 @@
+"""Internal utilies to resolve packages from strings."""
 import importlib
 import inspect
 from pathlib import Path
 from types import ModuleType
+
+__all__ = ["resolve_package", "resolve_maybe_relative"]
 
 
 def _strip_left_dots(s: str) -> tuple[str, int]:

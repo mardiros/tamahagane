@@ -42,16 +42,22 @@ release = version
 # ones.
 extensions = [
     "myst_parser",
+    "sphinx.ext.autodoc",
     "autodoc2",
 ]
+
+
+autodoc_default_options = {
+    "member-order": "bysource",
+    "undoc-members": True,
+}
+
 
 autodoc2_packages = [
     {"path": "../../src/tamahagane"},
 ]
 
-autodoc2_module_all_regexes = [
-    "tamahagane",
-]
+autodoc2_module_all_regexes = []
 
 
 autodoc2_docstring_parser_regexes = [
@@ -63,7 +69,6 @@ autodoc2_hidden_objects = ["undoc", "private", "inherited"]
 autodoc2_render_plugin = "myst"
 
 autodoc2_output_dir = "develop"
-autodoc2_sort_names = True
 
 # Configure MyST parser
 myst_enable_extensions = [

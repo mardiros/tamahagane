@@ -12,16 +12,37 @@ from typing import Any, ClassVar, Generic, TypeVar
 
 from tamahagane.resolver import resolve_maybe_relative
 
+__all__ = [
+    "T",
+    "KeyOfRegistry",
+    "CallbackHook",
+    "RegisteredFn",
+    "CallbackInfo",
+    "Scanner",
+    "attach",
+]
+
+
 T = TypeVar("T")
+"""Represent the final registry to forge."""
+
 KeyOfRegistry = str
+"""Represent a valid attribute of the registry T."""
+
 CallbackHook = Callable[[T], None]
+"""Callback hook."""
+
 RegisteredFn = Callable[..., Any]
+"""Represent the decorated method that will be hooked in the registry after a scan."""
 
 
 @dataclass
 class CallbackInfo:
+    """Store information at import time to fillout registries during the scan."""
     fn: RegisteredFn
+    """The decorated method."""
     callback: CallbackHook[Any]
+    """Its inner callback method."""
 
 
 class Scanner(Generic[T]):
@@ -34,6 +55,12 @@ class Scanner(Generic[T]):
     loaded_mods: ClassVar[set[ModuleType]] = set()
 
     def __init__(self, registry: T):
+        """
+        Initialize the scanner for the given registry.
+
+        :param registry: application registry contains attributes of registry to scan.
+            The attributes act as the category to filters at scanning.
+        """
         self.registry = registry
         self.categories = {cat for cat in dir(registry) if not cat.startswith("_")}
 
