@@ -76,6 +76,8 @@ class Scanner(Generic[T]):
             for mod in modules
         ]
         mod_names = [mod.__name__ for mod in mods]
+        if isinstance(ignore, str):
+            ignore = [ignore]
         absolute_ignore: list[str] = []
         for ign in ignore:
             if ign.startswith("."):

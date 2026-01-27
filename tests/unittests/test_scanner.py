@@ -23,6 +23,12 @@ from tests.lazyapp import Cli, Registries
         ),
         pytest.param(
             ["tests.lazyapp.commands"],
+            "tests.lazyapp.commands.ignoreme.wanted",
+            {"hello-sub", "hello-world"},
+            id="ignore one string",
+        ),
+        pytest.param(
+            ["tests.lazyapp.commands"],
             ["tests.lazyapp.commands"],
             set[str](),
             id="ignore all",
