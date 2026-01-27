@@ -3,6 +3,7 @@ from collections.abc import Sequence
 import pytest
 
 import tamahagane as th
+import tests.lazyapp.commands
 from tests.lazyapp import Cli, Registries
 
 
@@ -11,6 +12,12 @@ from tests.lazyapp import Cli, Registries
     [
         pytest.param(
             ["tests.lazyapp.commands"],
+            ["tests.lazyapp.commands.ignoreme"],
+            {"hello-sub", "hello-world"},
+            id="regular package / exclude packge",
+        ),
+        pytest.param(
+            [tests.lazyapp.commands],
             ["tests.lazyapp.commands.ignoreme"],
             {"hello-sub", "hello-world"},
             id="regular package / exclude packge",
