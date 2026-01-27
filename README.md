@@ -1,10 +1,8 @@
 # Tamahagane
 
-
 [![Documentation](https://github.com/mardiros/tamahagane/actions/workflows/publish-doc.yml/badge.svg)](https://mardiros.github.io/tamahagane/)
 [![Continuous Integration](https://github.com/mardiros/tamahagane/actions/workflows/tests.yml/badge.svg)](https://github.com/mardiros/tamahagane/actions/workflows/tests.yml)
 [![Coverage Report](https://codecov.io/gh/mardiros/tamahagane/graph/badge.svg?token=DTpi73d7mf)](https://codecov.io/gh/mardiros/tamahagane)
-
 
 Forge your application registries.
 
@@ -85,12 +83,11 @@ No overhead.
 
 ## Difference from Venusian
 
-* Tamahagane supports absolute and relative name of module on scanner method scan.
-* Tamahagane does not have a onerror on the scan, it raises.
-* Tamahagane only support list of string, or tuple of string on the `onignore`.
-* Tamahagane does not have a category on the scan method, the categories are the
+- Tamahagane supports absolute and relative name of module on scanner method scan.
+- Tamahagane does not have a `onerror` on the scan method, it raises.
+- Tamahagane does not have a category on the scan method, the categories are the
   attributes of the registry, nothing less, nothing more.
-* Tamahagane does not support class decoration.
+- Tamahagane does not support class decoration.
 
 ## Installation
 
@@ -101,6 +98,16 @@ So you can installing using your favorite packaging tool, mine is uv:
 ```bash
 uv add tamahagane
 ```
+
+## List of libraries using Tamahagane
+
+Here is a curative list of projects using tamahagane:
+
+| Library     | Description                                                                 | Repository                                      |
+|-------------|-----------------------------------------------------------------------------|-------------------------------------------------|
+| fastlife    | A web framework that register routes, templates and more using th. | [github.com/mardiros/fastlife](https://github.com/mardiros/fastlife)   |
+| messagebus  | A message bus implementation for Python applications. | [github.com/mardiros/messagebus](https://github.com/mardiros/messagebus) |
+| whitesmith  | A testing library for blacksmith rest client. | [github.com/mardiros/whitesmith](https://github.com/mardiros/whitesmith) |
 
 ## See also
 
