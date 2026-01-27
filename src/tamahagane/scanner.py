@@ -39,6 +39,7 @@ RegisteredFn = Callable[..., Any]
 @dataclass
 class CallbackInfo:
     """Store information at import time to fillout registries during the scan."""
+
     fn: RegisteredFn
     """The decorated method."""
     callback: CallbackHook[Any]
@@ -98,10 +99,15 @@ class Scanner(Generic[T]):
             If you expose a scan method in a framework, the depth of the stack frame
             must be updated in order to get it relative to the appropriate caller.
         """
-        mods = [
-            resolve_maybe_relative(mod, stack_depth) if isinstance(mod, str) else mod
-            for mod in modules
-        ]
+        # XXX we don't use a list comprehension because the resolve_maybe_relative
+        # method use stack frame and the stack frame changes on list comprehension
+        # somewhere  between python 3.10 and 3.12
+        mods: list[ModuleType] = []
+        for mod in modules:
+            if isinstance(mod, str):
+                mods.append(resolve_maybe_relative(mod, stack_depth))
+            else:
+                mods.append(mod)
         mod_names = [mod.__name__ for mod in mods]
         if isinstance(ignore, str):
             ignore = [ignore]
