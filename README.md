@@ -83,11 +83,13 @@ No overhead.
 
 ## Difference from Venusian
 
+- Tamahagene is fully typed.
 - Tamahagane supports absolute and relative name of module on scanner method scan.
+- Tamahagane `ignore` does not accept a callable method.
 - Tamahagane does not have a `onerror` on the scan method, it raises.
-- Tamahagane does not have a category on the scan method, the categories are the
-  attributes of the registry, nothing less, nothing more.
-- Tamahagane does not support class decoration.
+- Tamahagane does not have a category on the scan method, categories are declared
+  as attributes of the registry, nothing less, nothing more.
+- Tamagane does not support class/method decorator, does not provide `lift` decorators.
 
 ## Installation
 
