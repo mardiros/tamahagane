@@ -69,8 +69,8 @@ def command_handler(wrapped: CommandHandler) -> CommandHandler:
 
 ```
 
-Now, you have a command_handler decorator that can be used an be filled out an
-application registry with the decorated method.
+You now have a `command_handler` decorator that can be applied to functions,
+which will register them in the application registry.
 
 ```python
 @command_handler
@@ -78,8 +78,22 @@ def handle_stuff(...):
     ...
 ```
 
-handle_stuff is **unmodified** by its decorator and is purely unit testable.
-No overhead.
+The original `handle_stuff` function remains **unchanged** by the decorator,
+making it fully unit-testable with no added overhead.
+
+```{note}
+Tamahagane differs from Venusian in its callback method design.
+Rather than receiving the scanner as a parameter, the callback is provided with the
+registries object, which is shared across all scanned decorators.
+
+This design choice ensures type safety and better integration with modern Python
+practices.
+
+Additionally, the callback must be defined within the decorator itself to ensure access
+to the wrapped method.
+This eliminates unnecessary parameters and maintains a consistent, localized scope for
+the callback logic.
+```
 
 ## Difference from Venusian
 
