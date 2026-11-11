@@ -1,4 +1,5 @@
 """Internal utilies to resolve packages from strings."""
+
 import importlib
 import inspect
 from pathlib import Path
