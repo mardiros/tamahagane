@@ -34,8 +34,8 @@ Changelog = "https://mardiros.github.io/tamahagane/user/changelog.html"
 docs = [
     "furo >=2024.5.6",
     "linkify-it-py >=2.0.3,<3",
-    "myst-parser >=4.0.0,<5",
-    "sphinx >=8.0.0,<9",
+    "myst-parser >=5,<6",
+    "sphinx >=8,<10",
     "sphinx-autodoc2 >=0.5.0,<1",
 ]
 
@@ -48,8 +48,8 @@ dev = [
 docs = [
     "furo >=2024.5.6",
     "linkify-it-py >=2.0.3,<3",
-    "myst-parser >=4.0.0,<5",
-    "sphinx >=8.0.0,<9",
+    "myst-parser >=5,<6",
+    "sphinx >=8,<10",
     "sphinx-autodoc2 >=0.5.0,<1",
 ]
 
