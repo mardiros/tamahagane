@@ -1,3 +1,7 @@
+## 1.0.0 - Released on 2026-11-11
+* Add support of python 3.15
+* Drop support of python 3.10
+
 ## 0.4.3 - Released on 2026-01-27
 * Bugfix: relative import on python 3.10 looks not working properly. 
 
@@ -25,4 +29,3 @@
 
 ## 0.1.1 - Released on 2026-01-25
 * Initial Release
-
