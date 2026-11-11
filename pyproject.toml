@@ -9,15 +9,15 @@ requires-python = ">=3.11"
 classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: 3.15",
-    "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries",
     "Typing :: Typed",
 ]
 
@@ -34,8 +34,8 @@ Changelog = "https://mardiros.github.io/tamahagane/user/changelog.html"
 docs = [
     "furo >=2024.5.6",
     "linkify-it-py >=2.0.3,<3",
-    "myst-parser >=4.0.0,<5",
-    "sphinx >=8.0.0,<9",
+    "myst-parser >=5,<6",
+    "sphinx >=8,<10",
     "sphinx-autodoc2 >=0.5.0,<1",
 ]
 
@@ -48,8 +48,8 @@ dev = [
 docs = [
     "furo >=2024.5.6",
     "linkify-it-py >=2.0.3,<3",
-    "myst-parser >=4.0.0,<5",
-    "sphinx >=8.0.0,<9",
+    "myst-parser >=5,<6",
+    "sphinx >=8,<10",
     "sphinx-autodoc2 >=0.5.0,<1",
 ]
 
